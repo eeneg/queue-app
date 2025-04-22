@@ -1,12 +1,13 @@
 ### ER Diagram
 ```mermaid
 erDiagram
+    SERVICE ||--o{ CONSTRAINTS : ""
     SERVICE ||--o{ TICKET : ""
-    TICKET ||--o{ TRANSACTION : ""
     USER ||--o{ TRANSACTION : ""
+    USER |o--o| COUNTER : ""
     COUNTER ||--o{ TRANSACTION : ""
-    COUNTER |o--o| USER : ""
     TRANSACTION ||--o{ LOG : ""
+    TICKET ||--o{ TRANSACTION : ""
 
 SERVICE {
     ulid id PK
@@ -65,6 +66,17 @@ LOG {
     ulid id PK
     string status
     ulid transaction_id FK "cascade"
+    timestamp created_at "nullable"
+    timestamp updated_at "nullable"
+}
+
+CONSTRAINTS {
+    ulid id PK
+    string name "unique"
+    string description "nullable"
+    json value
+    boolean active
+    ulid service_id FK "cascade"
     timestamp created_at "nullable"
     timestamp updated_at "nullable"
 }
