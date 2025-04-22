@@ -19,6 +19,10 @@ class Service extends Model
         'active',
     ];
 
+    protected $casts = [
+        'requirements' => 'json',
+    ];
+
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
