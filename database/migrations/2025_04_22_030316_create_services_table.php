@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name')->unique();
-            $table->strig('prefix');
+            $table->string('prefix');
             $table->string('description')->nullable();
             $table->json('requirements')->nullable();
             $table->boolean('active')->default(true);
