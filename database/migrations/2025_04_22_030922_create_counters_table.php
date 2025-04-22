@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('counters', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('description')->nullable();
             $table->boolean('active')->default(true);
             $table->foreignIdFor(User::class)->constrained()->nullOnDelete();

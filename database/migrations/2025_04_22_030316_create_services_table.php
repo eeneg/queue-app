@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->strig('prefix');
             $table->string('description')->nullable();
             $table->json('requirements')->nullable();
