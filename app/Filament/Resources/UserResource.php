@@ -34,6 +34,7 @@ class UserResource extends Resource
                     ->alphaNum()
                     ->markAsRequired()
                     ->rule('required')
+                    ->unique(ignoreRecord: true)
                     ->dehydrateStateUsing(fn ($state) => strtolower($state))
                     ->extraInputAttributes(['style' => 'text-transform: lowercase']),
                 Forms\Components\TextInput::make('name')
