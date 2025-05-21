@@ -13,7 +13,17 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\Action::make('Password')
+                ->icon('heroicon-o-key')
+                ->form(static::getResource()::passwordFormComponents(onCreateOnly: false))
+                ->requiresConfirmation()
+                ->modalDescription('You are about to change the password for this user. Please ensure that you have the new password ready.')
+                ->modalWidth('lg')
+                ->modalAlignment('left')
+                ->slideOver(),
+            Actions\ActionGroup::make([
+                Actions\DeleteAction::make(),
+            ]),
         ];
     }
 }

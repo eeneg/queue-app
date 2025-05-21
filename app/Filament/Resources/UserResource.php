@@ -34,20 +34,27 @@ class UserResource extends Resource
                 Forms\Components\Select::make('role')
                     ->options(UserRole::class)
                     ->required(),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->markAsRequired()
-                    ->rule('required')
-                    ->confirmed()
-                    ->visibleOn('create')
-                    ->revealable(filament()->arePasswordsRevealable()),
-                Forms\Components\TextInput::make('password_confirmation')
-                    ->password()
-                    ->rule('required')
-                    ->dehydrated(false)
-                    ->visibleOn('create')
-                    ->revealable(filament()->arePasswordsRevealable()),
+                ...static::passwordFormComponents(),
             ]);
+    }
+
+    public static function passwordFormComponents(bool $onCreateOnly = true): array
+    {
+        return [
+            Forms\Components\TextInput::make('password')
+                ->password()
+                ->markAsRequired()
+                ->rule('required')
+                ->confirmed()
+                ->hiddenOn($onCreateOnly ? ['edit'] : [])
+                ->revealable(filament()->arePasswordsRevealable()),
+            Forms\Components\TextInput::make('password_confirmation')
+                ->password()
+                ->rule('required')
+                ->dehydrated(false)
+                ->hiddenOn($onCreateOnly ? ['edit'] : [])
+                ->revealable(filament()->arePasswordsRevealable()),
+        ];
     }
 
     public static function table(Table $table): Table
