@@ -13,6 +13,7 @@ class Ticket extends Model
     protected $fillable = [
         'number',
         'priority',
+        'service_id',
     ];
 
     public function service(): BelongsTo
