@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\UserRole;
 use App\Filament\Resources\CounterResource\Pages;
-use App\Filament\Resources\CounterResource\RelationManagers;
 use App\Models\Counter;
 use App\Models\User;
 use Filament\Forms;
