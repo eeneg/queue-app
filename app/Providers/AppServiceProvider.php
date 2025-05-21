@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Livewire\Notifications;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\VerticalAlignment;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Notifications::verticalAlignment(VerticalAlignment::End);
+
+        Notifications::alignment(Alignment::Start);
+
         TextInput::configureUsing(fn (TextInput $component) => $component->maxLength(255));
 
         Select::configureUsing(fn (Select $component) => $component->native(false));
