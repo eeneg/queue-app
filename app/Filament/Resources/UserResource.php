@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\UserRole;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
@@ -19,23 +20,25 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+
+
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(1)
             ->schema([
+                Forms\Components\TextInput::make('username')
+                    ->alphaNum()
+                    ->markAsRequired()
+                    ->rule('required')
+                    ->dehydrateStateUsing(fn ($state) => strtolower($state))
+                    ->extraInputAttributes(['style' => 'text-transform: lowercase']),
                 Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->minLength(8)
-                    ->maxLength(255),
+                    ->markAsRequired()
+                    ->rule('required'),
+                Forms\Components\Select::make('role')
+                    ->options(UserRole::class)
+                    ->required(),
             ]);
     }
 
@@ -43,17 +46,13 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Date Registered')
-                    ->dateTime('F j, Y')
+                Tables\Columns\TextColumn::make('username')
                     ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('role'),
             ])
             ->filters([
                 //
@@ -65,7 +64,8 @@ class UserResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('username');
     }
 
     public static function getRelations(): array
