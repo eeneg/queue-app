@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Login;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,8 +27,8 @@ class AppPanelProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('/')
-            ->login()
-            ->registration()
+            ->login(Login::class)
+            // ->registration()
             ->databaseNotifications()
             // ->emailVerification()
             // ->passwordReset()
