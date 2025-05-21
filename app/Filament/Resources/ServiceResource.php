@@ -80,7 +80,7 @@ class ServiceResource extends Resource
 
     public static function getNavigationBadgeTooltip(): ?string
     {
-        return 'The number of counters';
+        return 'The number of services';
     }
 
     public static function getEloquentQuery(): Builder
