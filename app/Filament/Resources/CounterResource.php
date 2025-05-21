@@ -13,12 +13,18 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class CounterResource extends Resource
 {
     protected static ?string $model = Counter::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->role === UserRole::ADMIN;
+    }
 
     public static function form(Form $form): Form
     {
