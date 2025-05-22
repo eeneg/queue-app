@@ -4,7 +4,6 @@ namespace App\Providers\Filament;
 
 use App\Enums\UserRole;
 use App\Filament\Pages\Login;
-use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;

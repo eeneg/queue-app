@@ -74,8 +74,7 @@ class TicketResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->when(Auth::user()->role === UserRole::AGENT, fn ($query) =>
-                $query->whereRelation('transaction', 'user_id', Auth::id())
+            ->when(Auth::user()->role === UserRole::AGENT, fn ($query) => $query->whereRelation('transaction', 'user_id', Auth::id())
             );
     }
 

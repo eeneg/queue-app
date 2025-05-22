@@ -23,10 +23,9 @@ class SkippedTransactionsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
-            ->modifyQueryUsing(fn ($query) =>
-                $query->reorder()
-                    ->whereRelation('log', 'status', LogStatus::SKIPPED)
-                    ->orderBy('created_at', 'desc')
+            ->modifyQueryUsing(fn ($query) => $query->reorder()
+                ->whereRelation('log', 'status', LogStatus::SKIPPED)
+                ->orderBy('created_at', 'desc')
             )
             ->columns([
                 Tables\Columns\TextColumn::make('ticket.number')
@@ -54,19 +53,19 @@ class SkippedTransactionsRelationManager extends RelationManager
                     ->visible(fn (Transaction $record): bool => $record->log?->status === LogStatus::SKIPPED)
                     ->icon(LogStatus::SERVED->getIcon())
                     ->modalIcon(LogStatus::SERVED->getIcon())
-                    ->modalDescription(fn (Transaction $record) => 'Serve ticket ' . $record->ticket->number)
+                    ->modalDescription(fn (Transaction $record) => 'Serve ticket '.$record->ticket->number)
                     ->modalWidth('lg')
                     ->form([
                         Radio::make('current')
-                            ->helperText(fn () => 'Current transaction ' . $this->ownerRecord->transaction?->ticket->number)
+                            ->helperText(fn () => 'Current transaction '.$this->ownerRecord->transaction?->ticket->number)
                             ->markAsRequired()
                             ->rule('required')
                             ->hiddenLabel()
-                            ->hidden(fn() => is_null($this->ownerRecord->transaction))
+                            ->hidden(fn () => is_null($this->ownerRecord->transaction))
                             ->options([
                                 LogStatus::SKIPPED->value => 'Skip',
                                 LogStatus::COMPLETED->value => 'Complete',
-                            ])
+                            ]),
                     ])
                     ->action(function (Tables\Actions\Action $component, Transaction $record, array $data) {
                         try {
@@ -74,8 +73,8 @@ class SkippedTransactionsRelationManager extends RelationManager
 
                             if ($this->ownerRecord->transaction) {
                                 $this->ownerRecord->transaction->log()->update([
-                                'status' => LogStatus::from($data['current']),
-                                'user_id' => Auth::id(),
+                                    'status' => LogStatus::from($data['current']),
+                                    'user_id' => Auth::id(),
                                 ]);
                             }
 
@@ -86,7 +85,7 @@ class SkippedTransactionsRelationManager extends RelationManager
 
                             $component->commitDatabaseTransaction();
 
-                            $component->successNotificationTitle('Serving ticket #' . $record->ticket->number);
+                            $component->successNotificationTitle('Serving ticket #'.$record->ticket->number);
 
                             $component->success();
                         } catch (Exception) {

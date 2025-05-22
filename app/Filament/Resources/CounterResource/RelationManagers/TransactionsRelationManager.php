@@ -47,24 +47,24 @@ class TransactionsRelationManager extends RelationManager
                     ->visible(fn (Transaction $record): bool => $record->log?->status === LogStatus::SKIPPED)
                     ->icon(LogStatus::SERVED->getIcon())
                     ->modalIcon(LogStatus::SERVED->getIcon())
-                    ->modalDescription(fn (Transaction $record) => 'Serve transaction ' . $record->ticket->number)
+                    ->modalDescription(fn (Transaction $record) => 'Serve transaction '.$record->ticket->number)
                     ->modalWidth('lg')
                     ->form([
                         Radio::make('current')
                             ->helperText('Current transaction')
                             ->markAsRequired()
                             ->rule('required')
-                            ->hidden(fn() => is_null($this->ownerRecord->transaction))
+                            ->hidden(fn () => is_null($this->ownerRecord->transaction))
                             ->options([
                                 LogStatus::SKIPPED->value => 'Skip',
                                 LogStatus::COMPLETED->value => 'Complete',
-                            ])
+                            ]),
                     ])
                     ->action(function (Transaction $record, array $data) {
                         if ($this->ownerRecord->transaction) {
                             $this->ownerRecord->transaction->log()->update([
-                            'status' => LogStatus::from($data['current']),
-                            'user_id' => Auth::id(),
+                                'status' => LogStatus::from($data['current']),
+                                'user_id' => Auth::id(),
                             ]);
                         }
 
