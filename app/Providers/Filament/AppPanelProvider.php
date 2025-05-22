@@ -30,6 +30,7 @@ class AppPanelProvider extends PanelProvider
             ->login(Login::class)
             // ->registration()
             ->databaseNotifications()
+            ->databaseTransactions()
             // ->emailVerification()
             // ->passwordReset()
             ->profile()

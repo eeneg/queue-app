@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Notifications::verticalAlignment(VerticalAlignment::End);
 
-        Notifications::alignment(Alignment::Start);
+        Notifications::alignment(Alignment::End);
 
         TextInput::configureUsing(fn (TextInput $component) => $component->maxLength(255));
 
