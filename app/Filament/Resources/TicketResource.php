@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\UserRole;
 use App\Filament\Resources\TicketResource\Pages;
 use App\Models\Ticket;
 use Filament\Forms;
@@ -9,6 +10,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class TicketResource extends Resource
 {
@@ -51,19 +54,6 @@ class TicketResource extends Resource
                     ->sortable()
                     ->dateTime(),
             ])
-            ->filters([
-                // Tables\Filters\SelectFilter::make('service_id')
-                //     ->label('Service')
-                //     ->relationship('service', 'name')
-                //     ->multiple()
-                //     ->preload()
-                //     ->placeholder('All Services'),
-            ])
-            ->actions([
-                Tables\Actions\ActionGroup::make([
-                    // Tables\Actions\DeleteAction::make(),
-                ]),
-            ])
             ->defaultSort('created_at', 'desc');
     }
 
@@ -81,13 +71,23 @@ class TicketResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->when(Auth::user()->role === UserRole::AGENT, fn ($query) =>
+                $query->whereRelation('transaction', 'user_id', Auth::id())
+            );
+    }
+
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return static::getEloquentQuery()->count();
     }
 
     public static function getNavigationBadgeTooltip(): ?string
     {
-        return 'The number of tickets generated';
+        return Auth::user()->role === UserRole::AGENT
+            ? 'The number of tickets served'
+            : 'The number of tickets generated';
     }
 }
