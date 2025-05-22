@@ -63,7 +63,8 @@ class TicketResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     // Tables\Actions\DeleteAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
