@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Enums\UserRole;
 use App\Filament\Pages\Login;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -17,6 +19,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AppPanelProvider extends PanelProvider
@@ -31,6 +34,8 @@ class AppPanelProvider extends PanelProvider
             // ->registration()
             ->databaseNotifications()
             ->databaseTransactions()
+            ->sidebarFullyCollapsibleOnDesktop()
+            ->topNavigation(fn () => Auth::user()?->role === UserRole::AGENT)
             // ->emailVerification()
             // ->passwordReset()
             ->profile()
