@@ -148,8 +148,6 @@ class ViewCounter extends ViewRecord
 
             $this->dispatch('refresh');
 
-            usleep(500 * 1000);
-
             $component->success();
         } catch (Exception) {
             $component->rollBackDatabaseTransaction();
