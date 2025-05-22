@@ -25,10 +25,10 @@ class ListTickets extends ListRecords
                         ->whereDate('created_at', now())
                         ->count() + 1;
 
-                    $data['number'] = "{$service->prefix}-" . str($number)->padLeft(3, '0');
+                    $data['number'] = "{$service->prefix}-".str($number)->padLeft(3, '0');
 
                     return $data;
-                })
+                }),
         ];
     }
 }

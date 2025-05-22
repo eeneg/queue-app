@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TicketResource\Pages;
-use App\Filament\Resources\TicketResource\RelationManagers;
 use App\Models\Ticket;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TicketResource extends Resource
 {
@@ -35,22 +32,32 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('number')
-                    ->searchable()
+                    ->searchable(isIndividual: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('service.name')
-                    ->searchable(),
+                    ->searchable(isIndividual: true)
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('transaction.counter.name')
+                    ->label('Counter')
+                    ->placeholder('waiting')
+                    ->searchable(isIndividual: true)
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('transaction.log.status')
+                    ->label('Status')
+                    ->placeholder('waiting')
+                    ->badge(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created')
                     ->sortable()
                     ->dateTime(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('service_id')
-                    ->label('Service')
-                    ->relationship('service', 'name')
-                    ->multiple()
-                    ->preload()
-                    ->placeholder('All Services'),
+                // Tables\Filters\SelectFilter::make('service_id')
+                //     ->label('Service')
+                //     ->relationship('service', 'name')
+                //     ->multiple()
+                //     ->preload()
+                //     ->placeholder('All Services'),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
