@@ -7,7 +7,7 @@ erDiagram
     USER |o--o| COUNTER : ""
     COUNTER ||--o{ TRANSACTION : ""
     TRANSACTION ||--o{ LOG : ""
-    TICKET ||--o{ TRANSACTION : ""
+    TICKET ||--|| TRANSACTION : ""
 
 SERVICE {
     ulid id PK
