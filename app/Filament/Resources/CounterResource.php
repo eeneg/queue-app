@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Filament\Resources\CounterResource\Pages;
 use App\Filament\Resources\CounterResource\RelationManagers;
 use App\Models\Counter;
+use App\Models\Ticket;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -40,6 +41,11 @@ class CounterResource extends Resource
 
         return $user->role === UserRole::ADMIN ?:
             $user->role === UserRole::AGENT && $record->user_id === $user->id;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return Auth::user()->role === UserRole::ADMIN;
     }
 
     public static function form(Form $form): Form
@@ -84,16 +90,21 @@ class CounterResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-            ->columns(1)
+            ->columns(2)
             ->schema([
                 Infolists\Components\TextEntry::make('transaction.ticket.number')
                     ->label(str('&nbsp;')->toHtmlString())
                     ->alignCenter()
                     ->extraAttributes(['class' => 'font-mono'])
                     ->placeholder('No ticket')
+                    ->columnSpanFull()
                     ->formatStateUsing(fn (string $state) => str("<span style='font-size: 7.5rem;'>$state</span>")
                         ->toHtmlString()
                     ),
+                Infolists\Components\TextEntry::make('queued-tickets')
+                    ->state(fn () => Ticket::whereDoesntHave('transaction')->pluck('number'))
+                    ->extraAttributes(['class' => 'font-mono', 'wire:poll.5s' => ''])
+                    ->bulleted(),
                 Infolists\Components\TextEntry::make('dailyTransactions.ticket.number')
                     ->extraAttributes(['class' => 'font-mono'])
                     ->bulleted(),
@@ -103,6 +114,7 @@ class CounterResource extends Resource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\SkippedTransactionsRelationManager::class,
             RelationManagers\TransactionsRelationManager::class,
         ];
     }
@@ -119,7 +131,7 @@ class CounterResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return static::getEloquentQuery()->count();
     }
 
     public static function getNavigationBadgeTooltip(): ?string
@@ -130,6 +142,9 @@ class CounterResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->when(Auth::user()->role === UserRole::AGENT, fn ($query) =>
+                $query->where('user_id', Auth::id())
+            )
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
