@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('status');
-            $table->foreignId(Transaction::class)->constrained()->cascadeOnDelete();
-            $table->foreignId(User::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(Transaction::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

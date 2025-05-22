@@ -13,6 +13,8 @@ class Log extends Model
 
     protected $fillable = [
         'status',
+        'transaction_id',
+        'user_id',
     ];
 
     protected $casts = [

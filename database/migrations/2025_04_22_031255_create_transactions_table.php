@@ -17,9 +17,9 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->text('remarks')->nullable();
-            $table->foreignId(Ticket::class)->constrained()->cascadeOnDelete();
-            $table->foreignId(Counter::class)->constrained()->nullOnDelete();
-            $table->foreignId(User::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(Ticket::class)->unique()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Counter::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

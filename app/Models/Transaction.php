@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Transaction extends Model
 {
@@ -13,6 +14,9 @@ class Transaction extends Model
 
     protected $fillable = [
         'remarks',
+        'ticket_id',
+        'counter_id',
+        'user_id',
     ];
 
     public function ticket(): BelongsTo
@@ -33,5 +37,12 @@ class Transaction extends Model
     public function logs(): HasMany
     {
         return $this->hasMany(Log::class);
+    }
+
+    public function log(): HasOne
+    {
+        return $this->logs()
+            ->one()
+            ->latestOfMany();
     }
 }
