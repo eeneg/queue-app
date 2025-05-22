@@ -4,14 +4,18 @@ namespace App\Filament\Resources;
 
 use App\Enums\UserRole;
 use App\Filament\Resources\CounterResource\Pages;
+use App\Filament\Resources\CounterResource\RelationManagers;
 use App\Models\Counter;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,9 +25,21 @@ class CounterResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    protected static bool $isGloballySearchable = false;
+
     public static function canAccess(): bool
     {
-        return Auth::user()->role === UserRole::ADMIN;
+        return in_array(Auth::user()->role, [UserRole::ADMIN, UserRole::AGENT]);
+    }
+
+    public static function canView(Model $record): bool
+    {
+        $user = Auth::user();
+
+        return $user->role === UserRole::ADMIN ?:
+            $user->role === UserRole::AGENT && $record->user_id === $user->id;
     }
 
     public static function form(Form $form): Form
@@ -60,14 +76,34 @@ class CounterResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->defaultSort('name');
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->columns(1)
+            ->schema([
+                Infolists\Components\TextEntry::make('transaction.ticket.number')
+                    ->label(str('&nbsp;')->toHtmlString())
+                    ->alignCenter()
+                    ->extraAttributes(['class' => 'font-mono'])
+                    ->placeholder('No ticket')
+                    ->formatStateUsing(fn (string $state) => str("<span style='font-size: 7.5rem;'>$state</span>")
+                        ->toHtmlString()
+                    ),
+                Infolists\Components\TextEntry::make('dailyTransactions.ticket.number')
+                    ->extraAttributes(['class' => 'font-mono'])
+                    ->bulleted(),
+            ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\TransactionsRelationManager::class,
         ];
     }
 
@@ -77,6 +113,7 @@ class CounterResource extends Resource
             'index' => Pages\ListCounters::route('/'),
             'create' => Pages\CreateCounter::route('/create'),
             'edit' => Pages\EditCounter::route('/{record}/edit'),
+            'view' => Pages\ViewCounter::route('/{record}'),
         ];
     }
 
