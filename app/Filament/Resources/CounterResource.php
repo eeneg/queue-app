@@ -102,11 +102,13 @@ class CounterResource extends Resource
                         ->toHtmlString()
                     ),
                 Infolists\Components\TextEntry::make('queued-tickets')
-                    ->state(fn () => Ticket::whereDoesntHave('transaction')->pluck('number'))
+                    ->state(fn () => Ticket::queued()->pluck('number'))
                     ->extraAttributes(['class' => 'font-mono', 'wire:poll.5s' => ''])
+                    ->placeholder('No tickets')
                     ->bulleted(),
                 Infolists\Components\TextEntry::make('dailyTransactions.ticket.number')
                     ->extraAttributes(['class' => 'font-mono'])
+                    ->placeholder('No transactions')
                     ->bulleted(),
             ]);
     }

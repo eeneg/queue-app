@@ -50,7 +50,7 @@ class SkippedTransactionsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\Action::make('serve')
-                    ->visible(fn (Transaction $record): bool => $record->log?->status === LogStatus::SKIPPED)
+                    ->visible(fn (Transaction $record): bool => $record->log?->status === LogStatus::SKIPPED && now()->isSameDay($record->ticket->created_at))
                     ->icon(LogStatus::SERVED->getIcon())
                     ->modalIcon(LogStatus::SERVED->getIcon())
                     ->modalDescription(fn (Transaction $record) => 'Serve ticket '.$record->ticket->number)
