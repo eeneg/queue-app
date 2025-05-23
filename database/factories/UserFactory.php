@@ -36,6 +36,7 @@ class UserFactory extends Factory
     public function root(): static
     {
         return $this->state(fn () => [
+            'name' => 'Root',
             'username' => 'root',
             'password' => '$2y$12$QJNCh9U1HO0mN/O7f53wt.UoX7T7hM8V.rBXFl/g5wIGQ.GnR7BOS',
             'role' => UserRole::ADMIN,
