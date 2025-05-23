@@ -18,8 +18,8 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->text('remarks')->nullable();
             $table->foreignIdFor(Ticket::class)->unique()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Counter::class)->constrained()->nullOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(Counter::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(User::class)->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }
