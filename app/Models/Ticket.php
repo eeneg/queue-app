@@ -40,17 +40,17 @@ class Ticket extends Model
 
         abort_unless($user_id && $counter_id, 404);
 
-        $ticket = $this->transaction()->create([
+        $transaction = $this->transaction()->create([
             'user_id' => $user_id,
             'counter_id' => $counter_id,
         ]);
 
-        $ticket->log()->create([
+        $transaction->log()->create([
             'status' => LogStatus::SERVED,
             'user_id' => Auth::id(),
         ]);
 
-        return $ticket;
+        return $transaction;
     }
 
     public function scopeQueued(Builder $builder, Carbon|DateTime|null $date = null): Builder
