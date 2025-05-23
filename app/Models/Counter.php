@@ -36,6 +36,7 @@ class Counter extends Model
     public function transaction(): HasOne
     {
         return $this->transactions()
+            ->whereHas('ticket', fn ($query) => $query->whereDate('created_at', now()))
             ->one()
             ->ofMany(
                 ['id' => 'max'],

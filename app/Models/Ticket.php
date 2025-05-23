@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Enums\LogStatus;
+use DateTime;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class Ticket extends Model
@@ -48,5 +51,12 @@ class Ticket extends Model
         ]);
 
         return $ticket;
+    }
+
+    public function scopeQueued(Builder $builder, Carbon|DateTime|null $date = null): Builder
+    {
+        return $builder->whereDoesntHave('transaction')
+            ->whereDate('created_at', $date ?? now())
+            ->whereRelation('service', 'active', true);
     }
 }
