@@ -19,6 +19,7 @@ class ListTickets extends ListRecords
     {
         return [
             Actions\Action::make('cancel-leftovers')
+                ->hidden()
                 ->requiresConfirmation()
                 ->modalDescription('Cancel all leftover tickets from previous days')
                 ->action(function (Actions\Action $component) {
