@@ -54,7 +54,8 @@ class TicketResource extends Resource
                     ->sortable()
                     ->dateTime(),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'desc')
+            ->poll(fn () => Auth::user()->role === UserRole::FRONTDESK ? '3s' : null);
     }
 
     public static function getRelations(): array
