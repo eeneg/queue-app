@@ -7,6 +7,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Livewire\Notifications;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\VerticalAlignment;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Model::automaticallyEagerLoadRelationships();
+
         Notifications::verticalAlignment(VerticalAlignment::End);
 
         Notifications::alignment(Alignment::End);
