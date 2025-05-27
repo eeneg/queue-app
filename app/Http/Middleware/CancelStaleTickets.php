@@ -43,12 +43,23 @@ class CancelStaleTickets
             ->whereDate('created_at', '<', now())
             ->where(function ($query) {
                 $query->whereDoesntHave('transaction')
-                    ->orWhereHas('transaction', fn ($query) => $query->whereRelation('log', 'status', LogStatus::SKIPPED));
+                    ->orWhereHas('transaction', fn ($query) => $query
+                        ->whereRelation('log', 'status', LogStatus::SKIPPED)
+                        ->orWhereRelation('log', 'status', LogStatus::SERVED)
+                    );
             });
 
         if ($staleTickets->exists()) {
             DB::transaction(function () use ($staleTickets) {
                 $staleTickets->lazyById()->each(function (Ticket $ticket) {
+                    if ($ticket->transaction()->exists()) {
+                        $ticket->transaction
+                            ->logs()
+                            ->create(['status' => LogStatus::CANCELLED]);;
+
+                        return;
+                    }
+
                     $ticket
                         ->transaction()
                         ->create(['remarks' => 'Cancelled due to being stale'])
