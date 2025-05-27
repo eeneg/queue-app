@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Token;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Livewire\Notifications;
@@ -9,6 +10,7 @@ use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\VerticalAlignment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::automaticallyEagerLoadRelationships();
+
+        Sanctum::usePersonalAccessTokenModel(Token::class);
 
         Notifications::verticalAlignment(VerticalAlignment::End);
 
