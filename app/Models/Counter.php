@@ -59,6 +59,6 @@ class Counter extends Model
 
     public function scopeOccupied(Builder $query, bool $occupied = true): Builder
     {
-        return $query->where('user_id', $occupied ? '<>' :  '=', null);
+        return $query->where('user_id', $occupied ? '<>' : '=', null);
     }
 }

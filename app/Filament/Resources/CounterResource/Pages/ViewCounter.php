@@ -3,16 +3,11 @@
 namespace App\Filament\Resources\CounterResource\Pages;
 
 use App\Enums\LogStatus;
-use App\Enums\UserRole;
 use App\Filament\Resources\CounterResource;
-use App\Models\Counter;
 use App\Models\Ticket;
-use App\Models\User;
 use Exception;
 use Filament\Actions;
-use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ViewRecord;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 

@@ -14,8 +14,6 @@ class CancelStaleTickets
 {
     /**
      * The name of the cache key for the last run time.
-     *
-     * @var string
      */
     protected static string $cacheKey = 'stale_tickets_cleanup_last_run';
 
@@ -28,7 +26,7 @@ class CancelStaleTickets
     {
         $lastRun = Cache::get(static::$cacheKey);
 
-        if (!$lastRun || $lastRun->addHours(6)->isPast()) {
+        if (! $lastRun || $lastRun->addHours(6)->isPast()) {
             $this->cancelStaleTickets();
 
             Cache::put(static::$cacheKey, now(), now()->addHours(6));
@@ -55,7 +53,7 @@ class CancelStaleTickets
                     if ($ticket->transaction()->exists()) {
                         $ticket->transaction
                             ->logs()
-                            ->create(['status' => LogStatus::CANCELLED]);;
+                            ->create(['status' => LogStatus::CANCELLED]);
 
                         return;
                     }

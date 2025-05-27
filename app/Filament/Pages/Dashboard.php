@@ -15,7 +15,7 @@ class Dashboard extends Page
 
     protected ?string $maxContentWidth = 'screen-2xl';
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
         return '';
     }
@@ -36,5 +36,4 @@ class Dashboard extends Page
             ->whereDoesntHave('transaction')
             ->get();
     }
-
 }
