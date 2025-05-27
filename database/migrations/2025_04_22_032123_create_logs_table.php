@@ -17,7 +17,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('status');
             $table->foreignIdFor(Transaction::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(User::class)->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }
