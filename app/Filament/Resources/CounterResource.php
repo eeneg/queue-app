@@ -144,8 +144,7 @@ class CounterResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->when(Auth::user()->role === UserRole::AGENT, fn ($query) => $query->where('user_id', Auth::id())
-            )
+            ->when(Auth::user()->role === UserRole::AGENT, fn ($query) => $query->where('user_id', Auth::id()))
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

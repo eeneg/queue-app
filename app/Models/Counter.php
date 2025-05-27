@@ -51,4 +51,14 @@ class Counter extends Model
             ->whereHas('ticket', fn ($query) => $query->whereDate('created_at', now()))
             ->latest();
     }
+
+    public function scopeActive(Builder $query, bool $active = true): Builder
+    {
+        return $query->where('active', $active);
+    }
+
+    public function scopeOccupied(Builder $query, bool $occupied = true): Builder
+    {
+        return $query->where('user_id', $occupied ? '<>' :  '=', null);
+    }
 }
