@@ -19,7 +19,7 @@ return new class extends Migration
             $table->json('value');
             $table->string('type');
             $table->boolean('active')->default(true);
-            $table->foreignId(Service::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Service::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
